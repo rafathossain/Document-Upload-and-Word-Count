@@ -1,12 +1,16 @@
 from flask import Flask
+from flask import render_template
+from jinja2 import TemplateNotFound
 
 app = Flask(__name__)
 
-
-@app.route('/')
-def hello_world():  # put application's code here
-    return 'Hello World!'
+app.config['DEBUG'] = True
 
 
-if __name__ == '__main__':
-    app.run()
+@app.route('/', defaults={'path': 'index.html'})
+@app.route('/<path>')
+def index(path):
+    try:
+        return render_template(path)
+    except TemplateNotFound:
+        return render_template('page-404.html'), 404
