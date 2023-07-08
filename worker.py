@@ -1,16 +1,14 @@
-from flask import Flask
+import os
 
-from celery import Celery, Task
+import redis
+from rq import Worker, Queue, Connection
 
+listen = ['default']
 
-def celery_init_app(main_app: Flask) -> Celery:
-    class FlaskTask(Task):
-        def __call__(self, *args: object, **kwargs: object) -> object:
-            with main_app.app_context():
-                return self.run(*args, **kwargs)
+redis_url = os.getenv('REDIS_URL', 'redis://localhost:6379')
 
-    celery_app = Celery(main_app.name, task_cls=FlaskTask)
-    celery_app.config_from_object(main_app.config["CELERY"])
-    celery_app.set_default()
-    main_app.extensions["celery"] = celery_app
-    return celery_app
+conn = redis.from_url(redis_url)
+
+if __name__ == '__main__':
+    w = Worker(['default'], connection=conn)
+    w.work()
