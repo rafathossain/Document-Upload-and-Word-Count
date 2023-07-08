@@ -1,0 +1,72 @@
+version: '3'
+
+networks:
+  document-uploader-tier:
+    driver: bridge
+
+services:
+  document_uploader_web:
+    container_name: document_uploader_web
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ./deployment/start-app
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    ports:
+      - "127.0.0.1:8080:8000"
+    networks:
+      - document-uploader-tier
+
+  document_uploader_db:
+    container_name: document_uploader_db
+    image: bitnami/mariadb:10.10.2
+    restart: always
+    env_file:
+      - .env
+    # Uncomment for persistent storage
+    #    volumes:
+    #      - /home/docker_persistent/document_uploade/db:/bitnami/mariadb
+    networks:
+      - document-uploader-tier
+
+  document_uploader_phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: document_uploader_phpmyadmin
+    env_file:
+      - .env
+    restart: always
+    ports:
+      - "127.0.0.1:5525:80"
+    depends_on:
+      - document_uploader_db
+    links:
+      - document_uploader_db
+    networks:
+      - document-uploader-tier
+
+  document_uploader_redis:
+    container_name: document_uploader_redis
+    image: redis:alpine
+    restart: always
+    read_only: false
+    command: redis-server --appendonly yes --replica-read-only no
+    networks:
+      - document-uploader-tier
+
+  document_uploader_rq:
+    container_name: document_uploader_rq
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    command: ./deployment/start-worker
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    networks:
+      - document-uploader-tier
