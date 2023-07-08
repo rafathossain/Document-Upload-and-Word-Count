@@ -3,6 +3,5 @@
 .env
 __pycache__
 .idea
-*env
 .coverage
 htmlcov
