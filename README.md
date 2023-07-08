@@ -1,25 +1,43 @@
-# Document Upload and Word Count TODO
+# Document Uploader and Word Count
 
-The task involves building two services:
+This repository contains a Flask application that allows users to upload documents and counts the number of words in each document matching with length "k"
 
-1. A document uploader service and
-2. A worker service.
+## Prerequisites
 
-The document uploader service will be responsible for uploading documents, while the worker service will process the documents asynchronously and count the number of words with a specified length, denoted by "k". Redis will be used as the message broker for communication between the services.
+<ul>
+  <li>Python 3.6 or higher</li>
+  <li>Flask</li>
+  <li>Docker</li>
+  <li>Docker Compose</li>
+</ul>
 
-### To complete the task, we require the following deliverables:
+## Setup
 
-1. <b>Source Code:</b> Please provide a link to your GitHub repository containing the complete source code of the document uploader service and the worker service. We appreciate well-structured and documented code that follows best practices.
+Clone this repository to your local machine:
 
-2. <b>Video Demonstration:</b> Along with the source code, we request a small video demonstrating the working of your solution. The video should showcase the interaction between the document uploader service and the worker service, highlighting the asynchronous processing and the accurate counting of words with the specified length. Please limit the video duration to a maximum of five minutes.
+```
+git clone https://github.com/rafathossain/Document-Upload-and-Word-Count.git
+```
 
-3. <b>Basic Jinja UI:</b> Implement a basic Jinja UI for the document uploader service to provide a user-friendly interface for uploading documents. The UI should allow users to select a document file and specify the desired word length for counting. Please ensure that the UI is clean, intuitive, and visually appealing.
+Navigate to the project directory:
 
-### Instructions:
+```
+cd Document-Upload-and-Word-Count
+```
 
-1. <b>Use Flask:</b> Implement the document uploader service and the worker service using the Flask web framework. Flask provides a lightweight and flexible approach to building web applications.
-2. <b>Redis as Broker:</b> Utilize Redis as the message broker for communication between the services. Redis will enable the asynchronous processing of documents and facilitate efficient task distribution.
-3. <b>Code Documentation:</b> Include clear and concise comments in your code to explain the functionality, major steps, and any important considerations.
+Create a `.env` file by copying the contents from <code>sample.env</code> provided in the repository. This file will contain the required parameters for the application.
 
-### Readme File:
-Include a Readme file in your GitHub repository that provides clear instructions on how to set up and run your application, including any necessary dependencies.
+Build and run the application using Docker Compose:
+
+```
+docker-compose up --build -d
+```
+
+Once the application is up and running, you can access it in your browser at <a href="http://127.0.0.1:8080">http://127.0.0.1:8080</a>
+<em>Note: The port number (<code>8080</code>) may vary depending on the configuration specified in your <code>docker-compose.yml</code> file.</em>
+
+You can also access the database via phpMyAdmin. To access it you can go to your browser at <a href="http://127.0.0.1:5525">http://127.0.0.1:5525</a>
+
+For persisting the data of docker, uncomment the lines mentioned in `docker-compose.yml`
+
+Thank you.
